@@ -141,7 +141,7 @@ var klaroConfig = {
 };
 
 
-document.addEventListener('DOMContentLoaded', function() {
+function initComplianceSettings() {
   function getComplianceSettings() {
     ppms.cm.api('getComplianceSettings', function(settings) {
       console.log('Current compliance settings:', settings);
@@ -231,4 +231,22 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-});
+};
+function waitForKlaro(callback) {
+  if (typeof klaro !== 'undefined') {
+    callback();
+  } else {
+    setTimeout(function() {
+      waitForKlaro(callback);
+    }, 100);
+  }
+}
+
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    waitForKlaro(initComplianceSettings);
+  });
+} else {
+  waitForKlaro(initComplianceSettings);
+}
